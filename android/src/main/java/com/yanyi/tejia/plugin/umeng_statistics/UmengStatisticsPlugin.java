@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.umcrash.UMCrash;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,6 +24,12 @@ import io.flutter.plugin.common.MethodChannel.Result;
  * UmengStatisticsPlugin
  */
 public class UmengStatisticsPlugin implements FlutterPlugin, MethodCallHandler {
+
+    public static void preInit(Context context,String key,String channel){
+        UMConfigure.preInit(context,key,channel);
+    }
+
+
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -177,7 +184,8 @@ public class UmengStatisticsPlugin implements FlutterPlugin, MethodCallHandler {
         if (err == null) {
             result.error(Consts.ARGUMENT_ERROR, "错误信息不能为空", "错误信息为空");
         }
-        MobclickAgent.reportError(mContext, err);
+        UMCrash.generateCustomLog(err,"FlutterError");
+ //       MobclickAgent.reportError(mContext, err);
 //        android.util.Log.i("UMLog", "reportError:" + err);
         result.success(true);
     }
